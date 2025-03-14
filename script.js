@@ -65,7 +65,7 @@ function addToCart(name, price){
 
 }
 
-
+const totalfinal = 0;
 //Atualiza o carrinho
 function updateCartModal(){
   cartItemsContainer.innerHTML = "";
@@ -90,8 +90,10 @@ function updateCartModal(){
 
       </div>
     `
-
+    
     total += item.price * item.quantity;
+    
+    
 
     cartItemsContainer.appendChild(cartItemElement)
 
@@ -199,7 +201,7 @@ checkoutBtn.addEventListener("click", function(){
 function checkRestaurantOpen(){
   const data = new Date();
   const hora = data.getHours();
-  return hora >= 0 && hora < 24; 
+  return hora >= 10 && hora < 22; 
   //true = restaurante está aberto 
 }
 
