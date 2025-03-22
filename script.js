@@ -152,49 +152,52 @@ addressInput.addEventListener("input", function(event){
 
 
 // Finalizar pedido
-checkoutBtn.addEventListener("click", function(){
-
+// Finalizar pedido
+checkoutBtn.addEventListener("click", function () {
   const isOpen = checkRestaurantOpen();
-  if(!isOpen){
-
+  if (!isOpen) {
     Toastify({
       text: "Ops o restaurante está fechado!",
       duration: 3000,
       close: true,
       gravity: "top", // `top` or `bottom`
-      position: "right", // `left`, `center` or `right`
+      position: "right", // `left`, `center` ou `right`
       stopOnFocus: true, // Prevents dismissing of toast on hover
       style: {
         background: "#ef4444",
       },
     }).showToast();
-
     return;
   }
 
-  if(cart.length === 0) return;
-  if(addressInput.value === ""){
-    addressWarn.classList.remove("hidden")
-    addressInput.classList.add("border-red-500")
+  if (cart.length === 0) return;
+  if (addressInput.value === "") {
+    addressWarn.classList.remove("hidden");
+    addressInput.classList.add("border-red-500");
     return;
   }
 
-  //Enviar o pedido para api whats
-  const cartItems = cart.map((item) => {
-    return (
-      ` ${item.name} Quantidade: (${item.quantity}) Preço: R$${item.price} |`
-    )
-  }).join("")
+  // Calcular o total do pedido
+  const totalPedido = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const message = encodeURIComponent(cartItems)
-  const phone = "5587999138915"
+  // Construir a mensagem do pedido
+  const cartItems = cart
+    .map((item) => {
+      return ` ${item.name} Quantidade: (${item.quantity}) Preço: R$${item.price.toFixed(2)}`;
+    })
+    .join(" | ");
 
-  window.open(`https://wa.me/5587999138915?text=${message} Endereço: ${addressInput.value}`, "_blank")
+  const message = encodeURIComponent(`${cartItems} | Total do pedido: R$ ${totalPedido.toFixed(2)} | Endereço: ${addressInput.value}`);
+  const phone = "5587999138915";
 
+  // Abrir o WhatsApp com a mensagem formatada
+  window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
+
+  // Limpar o carrinho e atualizar a interface
   cart = [];
   updateCartModal();
+});
 
-})
 
 
 // Verificar a hora e manipular o card horario
